@@ -1,0 +1,30 @@
+{
+  "name": "app",
+  "private": true,
+  "scripts": {
+    "build": "bun bun.config.js",
+    "generate-api": "openapi-generator-cli generate -i ./swagger/v1/swagger.yaml -g typescript-axios -o ./app/javascript/apis"
+  },
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.13.4",
+    "@types/bun": "^1.1.6",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@hotwired/stimulus": "^3.2.2",
+    "axios": "^1.7.2",
+    "controllers": "^0.0.2",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

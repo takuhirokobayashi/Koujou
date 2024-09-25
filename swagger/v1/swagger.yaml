@@ -1,0 +1,888 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/servers/{server_id}/daily_points":
+    parameters:
+    - name: server_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieves all daily points
+      tags:
+      - DailyPoints
+      parameters:
+      - name: target_date
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: daily points found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/DailyPoint"
+  "/api/v1/guilds/{guild_id}/daily_points":
+    parameters:
+    - name: guild_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Creates a daily point
+      tags:
+      - DailyPoints
+      parameters: []
+      responses:
+        '201':
+          description: daily point created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DailyPoint"
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/DailyPointInput"
+  "/api/v1/daily_points/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Show a daily point
+      tags:
+      - DailyPoints
+      responses:
+        '200':
+          description: daily point found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DailyPoint"
+        '404':
+          description: daily point not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update a daily point
+      tags:
+      - DailyPoints
+      parameters: []
+      responses:
+        '200':
+          description: daily point updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DailyPoint"
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '404':
+          description: daily point not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/DailyPointInput"
+    delete:
+      summary: Delete a daily point
+      tags:
+      - DailyPoints
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: daily point not found
+  "/api/v1/daily_points/crop_recent_file":
+    post:
+      summary: Crop Recent file
+      tags:
+      - DailyPoints
+      parameters: []
+      responses:
+        '200':
+          description: Success download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                recent_file:
+                  type: string
+                  format: binary
+                recent_x_axis:
+                  type: integer
+                recent_y_axis:
+                  type: integer
+              required:
+              - recent_file
+              - recent_x_axis
+              - recent_y_axis
+  "/api/v1/daily_points/crop_point_file":
+    post:
+      summary: Crop Point file
+      tags:
+      - DailyPoints
+      parameters: []
+      responses:
+        '200':
+          description: Success download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                point_file:
+                  type: string
+                  format: binary
+                point_x_axis:
+                  type: integer
+                point_y_axis:
+                  type: integer
+              required:
+              - point_file
+              - point_x_axis
+              - point_y_axis
+  "/api/v1/servers/{server_id}/daily_points/upload_ocr_and_show_results":
+    parameters:
+    - name: server_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Show OCR results
+      tags:
+      - DailyPoints
+      parameters: []
+      responses:
+        '200':
+          description: show OCR results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/DailyPointOCR"
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                recent_file:
+                  type: string
+                  format: binary
+                point_file:
+                  type: string
+                  format: binary
+                recent_x_axis:
+                  type: integer
+                recent_y_axis:
+                  type: integer
+                point_x_axis:
+                  type: integer
+                point_y_axis:
+                  type: integer
+              required:
+              - recent_file
+              - point_file
+              - recent_x_axis
+              - recent_y_axis
+              - point_x_axis
+              - point_y_axis
+  "/api/v1/daily_points/index_result_siege":
+    parameters:
+    - name: target_date
+      in: query
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Show Weekly daily point results
+      tags:
+      - DailyPoints
+      responses:
+        '200':
+          description: siege results found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  max_recorded_on:
+                    type: string
+                    format: date
+                    nullable: true
+                  daily_points:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/DailyPointGuildServer"
+                required:
+                - max_recorded_on
+                - daily_points
+  "/api/v1/servers/{server_id}/guilds":
+    parameters:
+    - name: server_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieves all guilds
+      tags:
+      - Guilds
+      responses:
+        '200':
+          description: guilds found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Guild"
+    post:
+      summary: Creates a guild
+      tags:
+      - Guilds
+      parameters: []
+      responses:
+        '201':
+          description: guild created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/GuildInputCreate"
+  "/api/v1/guilds/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Show a guild
+      tags:
+      - Guilds
+      responses:
+        '200':
+          description: guild found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Guild"
+        '404':
+          description: guild not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update a guild
+      tags:
+      - Guilds
+      parameters: []
+      responses:
+        '200':
+          description: guild updated
+        '422':
+          description: invalid request
+        '404':
+          description: guild not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/GuildInputUpdate"
+    delete:
+      summary: Delete a guild
+      tags:
+      - Guilds
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: guild not found
+  "/api/v1/servers/{server_id}/guilds/index_with_latest_power":
+    parameters:
+    - name: server_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieves all guilds with latest power
+      tags:
+      - Guilds
+      responses:
+        '200':
+          description: guilds found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/GuildWithLatestPower"
+  "/api/v1/servers/{server_id}/guilds/create_with_latest_power":
+    parameters:
+    - name: server_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Creates a guild with latest power
+      tags:
+      - Guilds
+      parameters: []
+      responses:
+        '201':
+          description: guild created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/GuildInputWithLatestPower"
+  "/api/v1/power_transitions":
+    get:
+      summary: Retrieves all power transitions
+      tags:
+      - PowerTransitions
+      responses:
+        '200':
+          description: power transitions found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PowerTransition"
+  "/api/v1/guilds/{guild_id}/power_transitions":
+    parameters:
+    - name: guild_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Creates a power transition
+      tags:
+      - PowerTransitions
+      parameters: []
+      responses:
+        '201':
+          description: power transition created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PowerTransitionInput"
+  "/api/v1/power_transitions/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Show a power transition
+      tags:
+      - PowerTransitions
+      responses:
+        '200':
+          description: power transition found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PowerTransition"
+        '404':
+          description: power transition not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update a power transition
+      tags:
+      - PowerTransitions
+      parameters: []
+      responses:
+        '200':
+          description: power transition updated
+        '422':
+          description: invalid request
+        '404':
+          description: power transition not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PowerTransitionInput"
+    delete:
+      summary: Delete a power transition
+      tags:
+      - PowerTransitions
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: power transition not found
+  "/api/v1/guilds/{guild_id}/power_transitions/create_or_update":
+    parameters:
+    - name: guild_id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: Creates or Update a power transition
+      tags:
+      - PowerTransitions
+      parameters: []
+      responses:
+        '200':
+          description: power transition updated
+        '201':
+          description: power transition created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PowerTransitionOnlyTotalPowerInput"
+  "/api/v1/servers":
+    get:
+      summary: Retrieves all servers
+      tags:
+      - Servers
+      responses:
+        '200':
+          description: servers found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Server"
+    post:
+      summary: Creates a server
+      tags:
+      - Servers
+      parameters: []
+      responses:
+        '201':
+          description: server created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ServerInput"
+  "/api/v1/servers/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Show a server
+      tags:
+      - Servers
+      responses:
+        '200':
+          description: server found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Server"
+        '404':
+          description: server not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update a server
+      tags:
+      - Servers
+      parameters: []
+      responses:
+        '200':
+          description: server updated
+        '422':
+          description: invalid request
+        '404':
+          description: server not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ServerInput"
+    delete:
+      summary: Delete a server
+      tags:
+      - Servers
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: server not found
+servers:
+- url: http://localhost:33000
+  description: Local server
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com
+components:
+  schemas:
+    Server:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        code:
+          type: string
+        siege_target:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - code
+      - siege_target
+      - created_at
+      - updated_at
+    ServerInput:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        siege_target:
+          type: boolean
+      required:
+      - name
+      - code
+      - siege_target
+    Guild:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        leader_name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - leader_name
+      - created_at
+      - updated_at
+    GuildInputCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        leader_name:
+          type: string
+      required:
+      - name
+      - leader_name
+    GuildInputUpdate:
+      type: object
+      properties:
+        server_id:
+          type: integer
+        name:
+          type: string
+        leader_name:
+          type: string
+      required:
+      - server_id
+      - name
+      - leader_name
+    GuildWithLatestPower:
+      type: object
+      properties:
+        guild_id:
+          type: integer
+        name:
+          type: string
+        leader_name:
+          type: string
+        total_power:
+          type: integer
+          nullable: true
+        recorded_on:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - guild_id
+      - name
+      - leader_name
+      - total_power
+      - recorded_on
+    GuildInputWithLatestPower:
+      type: object
+      properties:
+        guild:
+          type: object
+          properties:
+            server_id:
+              type: integer
+              nullable: true
+            name:
+              type: string
+            leader_name:
+              type: string
+          required:
+          - server_id
+          - name
+          - leader_name
+        power_transition:
+          type: object
+          properties:
+            total_power:
+              type: integer
+              nullable: true
+          required:
+          - total_power
+      required:
+      - guild
+      - power_transition
+    PowerTransition:
+      type: object
+      properties:
+        id:
+          type: integer
+        total_power:
+          type: integer
+        recorded_on:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - total_power
+      - recorded_on
+      - created_at
+      - updated_at
+    PowerTransitionInput:
+      type: object
+      properties:
+        total_power:
+          type: integer
+        recorded_on:
+          type: string
+          format: date
+      required:
+      - total_power
+      - recorded_on
+    PowerTransitionOnlyTotalPowerInput:
+      type: object
+      properties:
+        total_power:
+          type: integer
+      required:
+      - total_power
+    DailyPoint:
+      type: object
+      properties:
+        id:
+          type: integer
+        guild_id:
+          type: integer
+        total_points:
+          type: integer
+        yellow_city_count:
+          type: integer
+        purple_city_count:
+          type: integer
+        blue_city_count:
+          type: integer
+        recorded_on:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - guild_id
+      - total_points
+      - yellow_city_count
+      - purple_city_count
+      - blue_city_count
+      - recorded_on
+      - created_at
+      - updated_at
+    DailyPointInput:
+      type: object
+      properties:
+        guild_id:
+          type: integer
+        total_points:
+          type: integer
+        yellow_city_count:
+          type: integer
+        purple_city_count:
+          type: integer
+        blue_city_count:
+          type: integer
+        recorded_on:
+          type: string
+          format: date
+      required:
+      - guild_id
+      - total_points
+      - yellow_city_count
+      - purple_city_count
+      - blue_city_count
+      - recorded_on
+    DailyPointOCR:
+      type: object
+      properties:
+        guild_id:
+          type: integer
+          nullable: true
+        guild_name:
+          type: string
+        total_points:
+          type: integer
+          nullable: true
+        yellow_city_count:
+          type: integer
+          nullable: true
+        purple_city_count:
+          type: integer
+          nullable: true
+        blue_city_count:
+          type: integer
+          nullable: true
+      required:
+      - guild_id
+      - guild_name
+      - total_points
+      - yellow_city_count
+      - purple_city_count
+      - blue_city_count
+    DailyPointGuildServer:
+      type: object
+      properties:
+        daily_point_id:
+          type: integer
+        total_points:
+          type: integer
+        yellow_city_count:
+          type: integer
+        purple_city_count:
+          type: integer
+        blue_city_count:
+          type: integer
+        recorded_on:
+          type: string
+          format: date
+        guild_name:
+          type: string
+        server_name:
+          type: string
+      required:
+      - daily_point_id
+      - total_points
+      - yellow_city_count
+      - purple_city_count
+      - blue_city_count
+      - recorded_on
+      - guild_name
+      - server_name
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+      required:
+      - errors

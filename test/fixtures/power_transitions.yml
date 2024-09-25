@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  guild: one
+  total_power: 1
+  recorded_on: 2024-07-09
+
+two:
+  guild: two
+  total_power: 1
+  recorded_on: 2024-07-09

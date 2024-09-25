@@ -1,0 +1,4 @@
+rails g model Server code:string name:string
+rails g model Guild server:references name:string leader_name:string
+rails g model DailyPoint guild:references total_points:integer yellow_city_count:integer purple_city_count:integer blue_city_count:integer recorded_on:date
+rails g model PowerTransition guild:references total_power:integer recorded_on:date

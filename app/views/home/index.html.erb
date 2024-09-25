@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>攻城戦集計</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+  <body>
+    <div id="city_conquest_summary"></div>
+    <%= javascript_tag do %>
+      document.addEventListener( 'DOMContentLoaded', function() {
+      cityConquestSummary( 'city_conquest_summary' );
+      } );
+    <% end %>
+  </body>
+</html>

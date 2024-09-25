@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  guild: one
+  total_points: 1
+  yellow_city_count: 1
+  purple_city_count: 1
+  blue_city_count: 1
+  recorded_on: 2024-07-09
+
+two:
+  guild: two
+  total_points: 1
+  yellow_city_count: 1
+  purple_city_count: 1
+  blue_city_count: 1
+  recorded_on: 2024-07-09
